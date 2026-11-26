@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<title>ClientFlow — Customer workspace</title>
+<style>
+:root{--bg:#f4f6fa;--panel:#fff;--ink:#172033;--muted:#718096;--line:#e7ebf2;--brand:#405cf5;--brand2:#eef0ff;--green:#16845b;--amber:#a8640b;--red:#bd3d4b;--shadow:0 8px 30px rgba(20,35,70,.06)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.shell{display:grid;grid-template-columns:245px 1fr;min-height:100vh}
+aside{background:#101827;color:#e9eefb;padding:25px 16px;display:flex;flex-direction:column;gap:26px}
+.logo{font-size:22px;font-weight:800;letter-spacing:-.7px;padding:0 12px}.logo span{color:#91a0ff}
+.nav{display:grid;gap:7px}.nav button{border:0;background:transparent;color:#b9c4d8;text-align:left;padding:12px;border-radius:10px;font-weight:600}.nav button.active,.nav button:hover{background:#27334b;color:white}
+.aside-note{margin-top:auto;color:#9caac2;font-size:12px;padding:12px}
+main{padding:30px;max-width:1500px;width:100%;margin:auto}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:28px}.eyebrow{color:var(--muted);font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+h1{font-size:28px;margin:5px 0 0;letter-spacing:-.8px}.top-actions{display:flex;gap:9px;align-items:center}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:10px 14px;border-radius:10px;font-weight:700}.btn.primary{background:var(--brand);color:white;border-color:var(--brand)}.btn.small{padding:7px 10px;font-size:13px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:20px}.card,.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow)}
+.card{padding:18px}.card .label{color:var(--muted);font-size:13px}.card .value{font-size:27px;font-weight:800;margin-top:7px}.card .sub{font-size:12px;color:var(--muted);margin-top:4px}
+.panel{padding:20px;margin-bottom:18px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.panel h2{font-size:17px;margin:0}.muted{color:var(--muted)}.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}.field{border:1px solid var(--line);border-radius:9px;padding:10px 12px;background:#fff;color:var(--ink);min-width:0}.toolbar .field{flex:1;min-width:170px}
+table{width:100%;border-collapse:collapse}th{text-align:left;color:var(--muted);font-size:12px;font-weight:700;padding:11px 9px;border-bottom:1px solid var(--line)}td{padding:13px 9px;border-bottom:1px solid var(--line);font-size:14px}tr:last-child td{border-bottom:0}
+.pill{display:inline-block;padding:4px 9px;border-radius:30px;font-size:12px;font-weight:700;background:#eef1f6;color:#566174}.pill.customer,.pill.paid,.pill.done{background:#e5f6ee;color:var(--green)}.pill.prospect,.pill.pending{background:#fff3df;color:var(--amber)}.pill.lost,.pill.overdue{background:#ffeaec;color:var(--red)}
+.empty{text-align:center;padding:30px;color:var(--muted)}.view{display:none}.view.active{display:block}
+.modal-back{position:fixed;inset:0;background:#10182788;display:none;align-items:center;justify-content:center;padding:16px;z-index:5}.modal-back.show{display:flex}.modal{background:white;width:min(520px,100%);border-radius:16px;padding:22px;box-shadow:0 20px 70px #0003}.modal h2{margin:0 0 16px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.formgrid label{display:grid;gap:6px;color:var(--muted);font-size:12px;font-weight:700}.formgrid .wide{grid-column:1/-1}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+.notice{position:fixed;bottom:18px;right:18px;background:#172033;color:white;padding:12px 16px;border-radius:10px;display:none;z-index:9}
+@media(max-width:900px){.shell{grid-template-columns:1fr}aside{padding:14px;gap:12px}.logo{padding:0 5px}.nav{display:flex;overflow:auto}.nav button{white-space:nowrap}.aside-note{display:none}main{padding:19px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.top{align-items:flex-start;flex-direction:column}.top-actions{width:100%}.top-actions .btn{flex:1}.cards{gap:9px}.card{padding:13px}.card .value{font-size:22px}.panel{padding:14px;overflow-x:auto}.formgrid{grid-template-columns:1fr}.formgrid .wide{grid-column:auto}table{min-width:590px}h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside>
+  <div class="logo">Client<span>Flow</span></div>
+  <nav class="nav" aria-label="Main navigation">
+    <button type="button" class="active" data-view="dashboard">▦ &nbsp; Dashboard</button>
+    <button type="button" data-view="customers">♙ &nbsp; Customers</button>
+    <button type="button" data-view="orders">▤ &nbsp; Orders</button>
+    <button type="button" data-view="followups">◷ &nbsp; Follow-ups</button>
+  </nav>
+  <div class="aside-note">Simple customer management for growing stores.<br><br>V1 · Local demo</div>
+</aside>
+<main>
+  <header class="top">
+    <div><div class="eyebrow">Customer workspace</div><h1 id="pageTitle">Dashboard</h1></div>
+    <div class="top-actions"><button type="button" class="btn" id="exportBtn">Export data</button><button type="button" class="btn primary" id="quickAdd">+ Add customer</button></div>
+  </header>
+
+  <section class="view active" id="dashboard">
+    <div class="cards">
+      <div class="card"><div class="label">Total customers</div><div class="value" id="totalCustomers">0</div><div class="sub">People in your workspace</div></div>
+      <div class="card"><div class="label">Prospects</div><div class="value" id="totalProspects">0</div><div class="sub">Potential customers</div></div>
+      <div class="card"><div class="label">Orders recorded</div><div class="value" id="totalOrders">0</div><div class="sub">All order statuses</div></div>
+      <div class="card"><div class="label">Sales recorded</div><div class="value" id="totalSales">$0.00</div><div class="sub">Paid orders only</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>Recent customers</h2><button type="button" class="btn small" data-goto="customers">View all</button></div>
+      <div id="recentCustomers"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>Upcoming follow-ups</h2><button type="button" class="btn small" data-goto="followups">View reminders</button></div>
+      <div id="upcoming"></div>
+    </div>
+  </section>
+
+  <section class="view" id="customers">
+    <div class="panel">
+      <div class="panel-head"><h2>Customer directory</h2><button type="button" class="btn primary" id="addCustomer">+ Add customer</button></div>
+      <div class="toolbar"><input class="field" id="customerSearch" placeholder="Search name, email or phone"><select class="field" id="customerFilter"><option value="">All statuses</option><option>Prospect</option><option>Customer</option></select></div>
+      <div id="customerTable"></div>
+    </div>
+  </section>
+
+  <section class="view" id="orders">
+    <div class="panel">
+      <div class="panel-head"><h2>Orders</h2><button type="button" class="btn primary" id="addOrder">+ Add order</button></div>
+      <div id="orderTable"></div>
+    </div>
+  </section>
+
+  <section class="view" id="followups">
+    <div class="panel">
+      <div class="panel-head"><h2>Follow-up reminders</h2><button type="button" class="btn primary" id="addFollowup">+ Add reminder</button></div>
+      <div id="followupTable"></div>
+    </div>
+  </section>
+</main>
+</div>
+
+<div class="modal-back" id="modalBack"><div class="modal"><h2 id="modalTitle">Add customer</h2><form id="modalForm"><div class="formgrid" id="formFields"></div><div class="modal-actions"><button type="button" class="btn" id="cancelModal">Cancel</button><button class="btn primary" type="submit">Save</button></div></form></div></div>
+<div class="notice" id="notice"></div>
+
+<script>
+const KEY='clientflow_v1_data';
+const today=()=>new Date().toISOString().slice(0,10);
+let data=JSON.parse(localStorage.getItem(KEY)||'null')||{customers:[],orders:[],followups:[]};
+let modalType='';
+const $=id=>document.getElementById(id);
+const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(n)||0);
+const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function toast(msg){$('notice').textContent=msg;$('notice').style.display='block';setTimeout(()=>$('notice').style.display='none',2400)}
+window.addEventListener('error',function(){toast('A page error occurred. Please reload ClientFlow.');});
+function empty(msg){return `<div class="empty">${msg}</div>`}
+function table(headers,rows){if(!rows.length)return empty('Nothing here yet. Add your first record to get started.');return `<table><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table>`}
+function nav(view){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===view));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===view));$('pageTitle').textContent={dashboard:'Dashboard',customers:'Customers',orders:'Orders',followups:'Follow-ups'}[view]}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>nav(b.dataset.view));
+document.querySelectorAll('[data-goto]').forEach(b=>b.onclick=()=>nav(b.dataset.goto));
+function customerName(id){return data.customers.find(c=>c.id===id)?.name||'Unknown customer'}
+function render(){
+ $('totalCustomers').textContent=data.customers.length;
+ $('totalProspects').textContent=data.customers.filter(c=>c.status==='Prospect').length;
+ $('totalOrders').textContent=data.orders.length;
+ $('totalSales').textContent=money(data.orders.filter(o=>o.status==='Paid').reduce((a,o)=>a+Number(o.amount),0));
+ $('recentCustomers').innerHTML=data.customers.length?table(['Name','Email','Status'],data.customers.slice(-5).reverse().map(c=>`<tr><td><b>${safe(c.name)}</b></td><td>${safe(c.email||'—')}</td><td><span class="pill ${c.status.toLowerCase()}">${c.status}</span></td></tr>`)):empty('Your customer list will appear here.');
+ const next=data.followups.filter(f=>!f.done).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,5);
+ $('upcoming').innerHTML=next.length?table(['Customer','Due date','Reminder'],next.map(f=>`<tr><td>${safe(customerName(f.customerId))}</td><td>${safe(f.date)}</td><td>${safe(f.note)}</td></tr>`)):empty('No pending reminders.');
+ const q=($('customerSearch')?.value||'').toLowerCase(),filter=$('customerFilter')?.value||'';
+ const cs=data.customers.filter(c=>(!filter||c.status===filter)&&[c.name,c.email,c.phone].join(' ').toLowerCase().includes(q));
+ $('customerTable').innerHTML=table(['Name','Email','Phone','Status','Action'],cs.map(c=>`<tr><td><b>${safe(c.name)}</b></td><td>${safe(c.email||'—')}</td><td>${safe(c.phone||'—')}</td><td><span class="pill ${c.status.toLowerCase()}">${c.status}</span></td><td><button type="button" class="btn small" onclick="editCustomer('${c.id}')">Edit</button> <button type="button" class="btn small" onclick="deleteRecord('customers','${c.id}')">Delete</button></td></tr>`));
+ $('orderTable').innerHTML=table(['Customer','Product / item','Date','Amount','Status','Action'],data.orders.slice().reverse().map(o=>`<tr><td>${safe(customerName(o.customerId))}</td><td>${safe(o.item)}</td><td>${safe(o.date)}</td><td>${money(o.amount)}</td><td><span class="pill ${o.status.toLowerCase()}">${o.status}</span></td><td><button type="button" class="btn small" onclick="deleteRecord('orders','${o.id}')">Delete</button></td></tr>`));
+ $('followupTable').innerHTML=table(['Customer','Due date','Reminder','Status','Action'],data.followups.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(f=>`<tr><td>${safe(customerName(f.customerId))}</td><td>${safe(f.date)}</td><td>${safe(f.note)}</td><td><span class="pill ${f.done?'done':'pending'}">${f.done?'Done':'Pending'}</span></td><td>${f.done?'':`<button type="button" class="btn small" onclick="completeFollowup('${f.id}')">Mark done</button>`} <button type="button" class="btn small" onclick="deleteRecord('followups','${f.id}')">Delete</button></td></tr>`));
+}
+function openModal(type,record=null){modalType=type;$('formFields').innerHTML='';$('modalTitle').textContent=({customer:record?'Edit customer':'Add customer',order:'Add order',followup:'Add follow-up reminder'})[type];
+ const fields=type==='customer'?[['name','Full name','text',true],['email','Email address','email',false],['phone','Phone number','tel',false],['status','Status','select',true]]:type==='order'?[['customerId','Customer','customer',true],['item','Product / item','text',true],['date','Order date','date',true],['amount','Amount (USD)','number',true],['status','Payment status','orderstatus',true]]:[['customerId','Customer','customer',true],['date','Reminder date','date',true],['note','What should you follow up about?','text',true]];
+ fields.forEach(([name,label,kind,required])=>{let wrap=document.createElement('label');wrap.className=(name==='note'||name==='name')?'wide':'';wrap.textContent=label;let el;
+ if(kind==='select'||kind==='orderstatus'||kind==='customer'){el=document.createElement('select');el.className='field';let opts=kind==='select'?['Prospect','Customer']:kind==='orderstatus'?['Pending','Paid','Cancelled']:data.customers.map(c=>({value:c.id,label:c.name}));opts.forEach(o=>{let op=document.createElement('option');op.value=typeof o==='string'?o:o.value;op.textContent=typeof o==='string'?o:o.label;el.append(op)})}
+ else{el=document.createElement('input');el.type=kind;el.className='field';if(kind==='date')el.value=today();if(kind==='number'){el.min='0';el.step='0.01'}}
+ el.name=name;el.required=required;if(record&&record[name]!==undefined)el.value=record[name];wrap.append(el);$('formFields').append(wrap)});
+ $('modalBack').classList.add('show');$('modalForm').dataset.editId=record?.id||'';
+}
+function closeModal(){$('modalBack').classList.remove('show')}
+$('cancelModal').onclick=closeModal;
+$('addCustomer').onclick=$('quickAdd').onclick=()=>openModal('customer');
+$('addOrder').onclick=()=>{if(!data.customers.length)return toast('Add a customer before recording an order.');openModal('order')};
+$('addFollowup').onclick=()=>{if(!data.customers.length)return toast('Add a customer before creating a reminder.');openModal('followup')};
+$('modalForm').onsubmit=e=>{e.preventDefault();let obj=Object.fromEntries(new FormData(e.target));let id=e.target.dataset.editId||(window.crypto&&window.crypto.randomUUID?window.crypto.randomUUID():('cf-'+Date.now()+'-'+Math.random().toString(36).slice(2)));
+ if(modalType==='customer'){let old=data.customers.find(x=>x.id===id);let item={id,...obj};if(old)data.customers=data.customers.map(x=>x.id===id?item:x);else data.customers.push(item)}
+ if(modalType==='order')data.orders.push({id,...obj,amount:Number(obj.amount)});
+ if(modalType==='followup')data.followups.push({id,...obj,done:false});
+ closeModal();save();toast('Saved successfully.')};
+window.editCustomer=id=>{let c=data.customers.find(x=>x.id===id);if(c)openModal('customer',c)};
+window.deleteRecord=(type,id)=>{if(!confirm('Delete this record?'))return;data[type]=data[type].filter(x=>x.id!==id);save();toast('Record deleted.')};
+window.completeFollowup=id=>{let f=data.followups.find(x=>x.id===id);if(f){f.done=true;save();toast('Reminder completed.')}};
+$('customerSearch').oninput=render;$('customerFilter').onchange=render;
+$('exportBtn').onclick=()=>{let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='clientflow-backup.json';a.click();URL.revokeObjectURL(url);toast('Backup exported.')};
+render();
+// ClientFlow initialized successfully.
+</script>
+</body>
+</html>
